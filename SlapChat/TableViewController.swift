@@ -10,14 +10,39 @@ import UIKit
 
 class TableViewController: UITableViewController {
 
+    var messages: [Message] = []
+    let dataStore = DataStore()
+    
+    override  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("basicCell", forIndexPath: indexPath)
+        
+        let message: Message = messages[indexPath.row]
+        
+        if let content = message.content {
+            cell.textLabel?.text = content
+        }
+        
+        return cell
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        // load messages array here
+        dataStore.fetchData()
+        messages = dataStore.messages
         
+        //reload table
+        tableView.reloadData()
     }
 }
+
